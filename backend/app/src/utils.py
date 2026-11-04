@@ -4,7 +4,7 @@ from src.demandas import Demanda
 
 def plot(demanda: Demanda, amplitude: int = 12000, titulo: str = "") -> Figure:
   
-  dados = demanda.dados
+  dados = demanda.dados()
   
   with plt.style.context("ggplot"):
     fig, ax = plt.subplots()

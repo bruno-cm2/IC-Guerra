@@ -22,23 +22,39 @@ class Intervalo:
     )
     
 class Demanda(ABC, Intervalo):
+
+  TIPOS: dict[str, type["Demanda"]] = {}
+  
+  @classmethod
+  @abstractmethod
+  def nome(cls) -> str:
+    "Nome da classe a ser implementado"
+    pass
+  
+  def __init_subclass__(cls, **kwargs):
+    super().__init_subclass__(**kwargs)
+    Demanda.TIPOS[cls.nome()] = cls
+
   def __init__(self, minimo: int | None = None, maximo: int | None = None, amplitude: int | None = None, n_periodos: int=8):
     super().__init__(minimo, maximo, amplitude)
     self.n_periodos = n_periodos
     
-  @property
   @abstractmethod
   def dados(self) -> list[int]:
     "Método dados() a ser implementado"
 
 
 class DemandaUniforme(Demanda):
+  
+  @classmethod
+  def nome(cls) -> str:
+    return "Uniforme"
+  
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(2000, min(
         5000, maximo - minimo) if minimo is not None and maximo is not None else 5000)
     super().__init__(minimo, maximo, amplitude, n_periodos)
 
-  @property
   def dados(self) -> list[int]:
     return [random.randint(self.minimo, self.maximo) for _ in range(self.n_periodos)]
 
@@ -52,6 +68,10 @@ class DemandaUniforme(Demanda):
 
 class DemandaTendencia(Demanda):
 
+  @classmethod
+  def nome(cls) -> str:
+    return "Tendência"
+
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(5000, min(
         15000, maximo - minimo) if minimo is not None and maximo is not None else 15000)
@@ -59,7 +79,6 @@ class DemandaTendencia(Demanda):
     self.inicial = self.minimo/2
     self.incremento = (self.minimo - self.inicial) / self.n_periodos
 
-  @property
   def dados(self) -> list[int]:
     return [
         random.randint(
@@ -79,15 +98,19 @@ class DemandaTendencia(Demanda):
 
 class DemandaCiclica(Demanda):
 
+  @classmethod
+  def nome(cls) -> str:
+    return "Cíclica"
+
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(5000, min(
         10000, maximo - minimo) if minimo is not None and maximo is not None else 10000)
     super().__init__(minimo, maximo, amplitude, n_periodos)
     referencias_centro = [(i+1) * (self.amplitude // 4) +
                           self.minimo for i in range(3)]
-    self.referencias = (self.minimo, *referencias_centro, self.maximo)
+    self.referencias = [self.minimo, *referencias_centro, self.maximo]
 
-  def __ciclo(self, lista: list):
+  def __ciclo(self, lista: list[int]):
     n = len(lista) - 1
     i, direcao = random.randrange(n), random.choice([-1, 1])
     while True:
@@ -96,14 +119,13 @@ class DemandaCiclica(Demanda):
         direcao = -direcao
       i += direcao
 
-  @property
   def dados(self):
     geradores = self.__ciclo(self.referencias)
     return [random.randint(*next(geradores)) for _ in range(1, self.n_periodos + 1)]
 
   def __str__(self):
     return (
-        f"Demanda cíclica:\n"
-        f"{super().__str__()}\n"
-        f"Referências: {self.referencias}"
+      f"Demanda cíclica:\n"
+      f"{super().__str__()}\n"
+      f"Referências: {self.referencias}"
     )
