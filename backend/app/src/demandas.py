@@ -1,5 +1,6 @@
 import random
 from abc import ABC, abstractmethod
+from typing import ClassVar
 
 
 class Intervalo:
@@ -20,25 +21,24 @@ class Intervalo:
         f"Amplitude: {self.amplitude}\n"
         f"Centro: {self.centro:g}"
     )
+ 
     
 class Demanda(ABC, Intervalo):
 
-  TIPOS: dict[str, type["Demanda"]] = {}
-  
-  @classmethod
-  @abstractmethod
-  def nome(cls) -> str:
-    "Nome da classe a ser implementado"
-    pass
+  TIPOS: ClassVar[dict[str, type["Demanda"]]] = {}
+  tipo: ClassVar[str]
   
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)
-    Demanda.TIPOS[cls.nome()] = cls
+    if getattr(cls, "tipo", None) is None:
+      raise TypeError(f"{cls.__name__} deve definir o atributo 'nome'")
+    Demanda.TIPOS[cls.tipo] = cls
 
   def __init__(self, minimo: int | None = None, maximo: int | None = None, amplitude: int | None = None, n_periodos: int=8):
     super().__init__(minimo, maximo, amplitude)
     self.n_periodos = n_periodos
     
+  @property
   @abstractmethod
   def dados(self) -> list[int]:
     "Método dados() a ser implementado"
@@ -46,15 +46,14 @@ class Demanda(ABC, Intervalo):
 
 class DemandaUniforme(Demanda):
   
-  @classmethod
-  def nome(cls) -> str:
-    return "Uniforme"
+  tipo = "Uniforme"
   
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(2000, min(
         5000, maximo - minimo) if minimo is not None and maximo is not None else 5000)
     super().__init__(minimo, maximo, amplitude, n_periodos)
-
+  
+  @property
   def dados(self) -> list[int]:
     return [random.randint(self.minimo, self.maximo) for _ in range(self.n_periodos)]
 
@@ -68,9 +67,7 @@ class DemandaUniforme(Demanda):
 
 class DemandaTendencia(Demanda):
 
-  @classmethod
-  def nome(cls) -> str:
-    return "Tendência"
+  tipo = "Tendência"
 
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(5000, min(
@@ -79,6 +76,7 @@ class DemandaTendencia(Demanda):
     self.inicial = self.minimo/2
     self.incremento = (self.minimo - self.inicial) / self.n_periodos
 
+  @property
   def dados(self) -> list[int]:
     return [
         random.randint(
@@ -98,9 +96,7 @@ class DemandaTendencia(Demanda):
 
 class DemandaCiclica(Demanda):
 
-  @classmethod
-  def nome(cls) -> str:
-    return "Cíclica"
+  tipo = "Cíclica"
 
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(5000, min(
@@ -119,6 +115,7 @@ class DemandaCiclica(Demanda):
         direcao = -direcao
       i += direcao
 
+  @property
   def dados(self):
     geradores = self.__ciclo(self.referencias)
     return [random.randint(*next(geradores)) for _ in range(1, self.n_periodos + 1)]

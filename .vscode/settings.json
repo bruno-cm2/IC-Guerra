@@ -1,9 +1,14 @@
 {
   "python.analysis.extraPaths": ["./backend", "./backend/app"],
   "files.exclude": {
-    "**/__pycache__": true
+    "**/__pycache__": true,
+    ".mypy_cache":true,
+    "venv":true,
+    "*/node_modules":true
   },
   "search.exclude": {
-    "**/__pycache__": true
-  }
+    "**/__pycache__": true,
+    ".mypy_cache":true,
+  },
+  "mypy-type-checker.importStrategy": "fromEnvironment",
 }
