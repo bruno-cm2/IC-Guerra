@@ -1,0 +1,50 @@
+  {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Git pull",
+        "type": "shell",
+        "command": "git reset --hard origin/main",
+        "presentation": { "panel": "dedicated", "group": "setup" },
+      },
+      {
+        "label": "Preparar backend",
+        "type": "shell",
+        "command": "if (-not (Test-Path venv)) { python -m venv venv }; ./venv/Scripts/python.exe -m pip install -r ./requirements.txt",
+        "presentation": { "panel": "dedicated", "group": "setup" },
+      },
+      {
+        "label": "Preparar frontend",
+        "type": "shell",
+        "command": "../../venv/Scripts/python.exe npm install",
+        "options": { "cwd": "${workspaceFolder}/frontend" },
+        "presentation": { "panel": "dedicated", "group": "setup" },
+      },
+      {
+        "label": "Backend (uvicorn)",
+        "type": "shell",
+        "command": "../../venv/Scripts/python.exe -m uvicorn main:app --reload",
+        "options": { "cwd": "${workspaceFolder}/backend/app" },
+        "presentation": { "panel": "dedicated", "group": "dev" },
+      },
+      {
+        "label": "Frontend (npm)",
+        "type": "shell",
+        "command": "../../venv/Scripts/python.exe npm run dev",
+        "options": { "cwd": "${workspaceFolder}/frontend" },
+        "presentation": { "panel": "dedicated", "group": "dev" },
+      },
+      {
+        "label": "Servidores",
+        "dependsOn": ["Backend (uvicorn)", "Frontend (npm)"],
+        "runOptions": {"runOn": "folderOpen"},
+        "problemMatcher": [],
+      },
+      {
+        "label": "Update",
+        "dependsOn": ["Git pull", "Preparar backend", "Preparar frontend", "Servidores"],
+        "dependsOrder": "sequence",
+        "problemMatcher": [],
+      },
+    ]
+  }
