@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 from typing import ClassVar
-
+from .utils import normalize
 
 class Intervalo:
   def __init__(self, minimo: int | None = None, maximo: int | None = None, amplitude: int | None = None):
@@ -24,14 +24,15 @@ class Intervalo:
  
     
 class Demanda(ABC, Intervalo):
-
   TIPOS: ClassVar[dict[str, type["Demanda"]]] = {}
-  tipo: ClassVar[str]
+  nome: ClassVar[str]
   
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)
-    if getattr(cls, "tipo", None) is None:
+    if getattr(cls, "nome", None) is None:
       raise TypeError(f"{cls.__name__} deve definir o atributo 'nome'")
+    cls.tipo = normalize(cls.nome.lower())
+
     Demanda.TIPOS[cls.tipo] = cls
 
   def __init__(self, minimo: int | None = None, maximo: int | None = None, amplitude: int | None = None, n_periodos: int=8):
@@ -46,7 +47,7 @@ class Demanda(ABC, Intervalo):
 
 class DemandaUniforme(Demanda):
   
-  tipo = "Uniforme"
+  nome = "Uniforme"
   
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(2000, min(
@@ -67,7 +68,7 @@ class DemandaUniforme(Demanda):
 
 class DemandaTendencia(Demanda):
 
-  tipo = "Tendência"
+  nome = "Tendência"
 
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(5000, min(
@@ -96,7 +97,7 @@ class DemandaTendencia(Demanda):
 
 class DemandaCiclica(Demanda):
 
-  tipo = "Cíclica"
+  nome = "Cíclica"
 
   def __init__(self, minimo: int | None = None, maximo: int | None = None, n_periodos: int=8):
     amplitude = random.randint(5000, min(

@@ -1,13 +1,15 @@
-from fastapi import APIRouter
-from schemas import TiposEnum, TIPOS, DemandaModel
+from fastapi import APIRouter, Query
+from schemas import DemandaModel
+from typing import Literal, get_args
+from src import Demanda
 
-demandas_router = APIRouter(prefix="/demandas", tags=["Demandas"])
+demandas_router = APIRouter(prefix="/demandas")
 
-@demandas_router.get("/tipos", response_model=list[str])
-def listar_tipos():
-    return [t.value for t in TiposEnum]
+tipos = Literal["uniforme", "tendencia", "ciclica"]
+nomes = [classe().nome for classe in Demanda.TIPOS.values()]
 
-@demandas_router.get("/{tipo}", response_model= DemandaModel)
-def gerar_demanda(tipo: TiposEnum):
-    classe = TIPOS[tipo.value]()
-    return classe
+@demandas_router.get("", response_model=DemandaModel | list[str])
+def get_demandas(tipo: tipos | None = None, periodo: int = Query(8, ge=4, le=20)):
+    if tipo is None:
+        return nomes
+    return Demanda.TIPOS[tipo](n_periodos=periodo)

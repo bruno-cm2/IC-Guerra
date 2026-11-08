@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from src.demandas import Demanda
+import unicodedata
 
-def plot(demanda: Demanda, amplitude: int = 12000, titulo: str = "") -> Figure:
+def plot(demanda, amplitude: int = 12000, titulo: str = "") -> Figure:
   
-  dados = demanda.dados()
+  dados = demanda.dados
   
   with plt.style.context("ggplot"):
     fig, ax = plt.subplots()
@@ -15,3 +15,6 @@ def plot(demanda: Demanda, amplitude: int = 12000, titulo: str = "") -> Figure:
     ax.set_title(f"Demanda {titulo}")
 
   return fig
+
+def normalize(string : str):
+  return unicodedata.normalize('NFD', string).encode('ascii', 'ignore').decode('ascii')

@@ -1,16 +1,26 @@
-import { Dropdown, Placeholder } from "react-bootstrap"
+import { Dropdown } from "react-bootstrap"
 import { useState } from "react"
 
 interface Props{
-    opcoes: string[]
+    opcoes: string[] | number[]
+    className?: string
+    placeholder?: string
+    variant?: string
+    onChange?: (valor: string) => void
 }
 
-export const DropdownMenu = ({opcoes}: Props, placeholder: string = "Escolha") => {
-    const [opcao, setOpcao] = useState<string | null>(placeholder)
+export const DropdownMenu = ({opcoes, className, placeholder, variant, onChange}: Props) => {
+    const [opcao, setOpcao] = useState<string | number |null>(placeholder || opcoes[0])
+
+    const handleSelect = (eventKey: string | null) =>{
+        if (eventKey == null) return
+        setOpcao(eventKey)
+        onChange?.(eventKey)
+    }
 
     return (
-        <Dropdown onSelect={eventKey => setOpcao(eventKey)}>
-            <Dropdown.Toggle variant="primary">
+        <Dropdown className={className} onSelect={handleSelect}>
+            <Dropdown.Toggle variant={variant}>
                 {opcao}
             </Dropdown.Toggle>
             <Dropdown.Menu>

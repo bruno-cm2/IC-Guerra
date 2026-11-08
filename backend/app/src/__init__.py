@@ -1,5 +1,5 @@
 from .demandas import Demanda, DemandaUniforme, DemandaTendencia, DemandaCiclica
-from .utils import plot
+from .utils import *
 
 __all__ = [
     "Demanda",
@@ -7,4 +7,5 @@ __all__ = [
     "DemandaTendencia",
     "DemandaCiclica",
     "plot",
+    "normalize"
 ]

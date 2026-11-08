@@ -1,9 +1,8 @@
-import { DropdownMenu } from "./components/DropdownMenu"
-import { TIPOS } from "./api"
+import { Rotas } from "./routes/Routes"
 
 export const App = () => {
 
   return (
-    <DropdownMenu opcoes = {TIPOS}></DropdownMenu>
+    <Rotas />
   )
 }

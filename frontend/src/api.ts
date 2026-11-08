@@ -5,5 +5,5 @@ export const api: AxiosInstance = axios.create({
     baseURL: 'http://localhost:8000/'
 })
 
-export const TIPOS: string[] = (await api.get<string[]>('demandas/tipos')).data
-export const getDemanda = (tipo: string) => api.get<Demanda>('demanda/' + tipo)
+export const TIPOS: string[] = (await api.get<string[]>('demandas')).data
+export const getDemanda = (tipo: string, periodo: number) => api.get<Demanda>('demandas', {params: {tipo, periodo}})

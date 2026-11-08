@@ -6,7 +6,7 @@ interface components {
       maximo: number;
       n_periodos: number;
       dados: number[];
-      amplitude: number | null;
+      amplitude: number;
       referencias?: number[] | null;
     };
   };
