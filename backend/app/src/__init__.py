@@ -6,6 +6,5 @@ __all__ = [
     "DemandaUniforme",
     "DemandaTendencia",
     "DemandaCiclica",
-    "plot",
     "normalize"
 ]
