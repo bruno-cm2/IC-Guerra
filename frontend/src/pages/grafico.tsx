@@ -33,7 +33,7 @@ export const Grafico = () => {
                     <FormControl 
                         type="number"
                         min={4} 
-                        max={20} 
+                        max={36} 
                         defaultValue={8} 
                         style={{ width: 70 }} 
                         onChange={(e) => handlePeriodo(Number(e.target.value))}>

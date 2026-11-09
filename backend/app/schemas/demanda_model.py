@@ -6,7 +6,8 @@ class DemandaModel(BaseModel):
     tipo: str
     minimo: int
     maximo: int
-    n_periodos: int
+    amplitude: int
+    periodo: int
     dados: list[int]
     referencias: list[int] | None = None
-    amplitude: int
+    peso: float | None = None

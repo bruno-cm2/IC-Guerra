@@ -25,13 +25,12 @@ export const Chart = ({demanda, width, className}: Props) => {
       }))
     }, [demanda])
 
-  const amplitude = demanda.amplitude * 1.2
   return (
     <ResponsiveContainer width={typeof width === 'number' ? `${width}%` : width ?? '100%'} aspect={2} className={className}>
       <LineChart data={dados}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={'periodo'}/>
-        <YAxis domain={[demanda.minimo - Math.round(amplitude/2), demanda.maximo + Math.round(amplitude/2)]}/>
+        <YAxis domain={['auto', 'auto']} />
         <Tooltip />
         <Line type="monotone" dataKey="valor" stroke="#0d6efd" strokeWidth={2} dot animationDuration={400} />
       </LineChart>
