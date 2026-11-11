@@ -23,8 +23,8 @@
       {
         "label": "Backend (uvicorn)",
         "type": "shell",
-        "command": "../../venv/Scripts/python.exe -m uvicorn main:app --reload",
-        "options": { "cwd": "${workspaceFolder}/backend/app" },
+        "command": "../venv/Scripts/python.exe -m uvicorn main:app --reload",
+        "options": { "cwd": "${workspaceFolder}/backend" },
         "presentation": { "panel": "dedicated", "group": "dev" },
       },
       {

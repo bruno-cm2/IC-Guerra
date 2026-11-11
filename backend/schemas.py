@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-class DemandaModel(BaseModel):
+class DemandaSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     nome: str
