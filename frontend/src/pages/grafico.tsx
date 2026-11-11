@@ -1,7 +1,7 @@
 import { Button, Container, FormControl, InputGroup } from "react-bootstrap"
-import { getDemanda, TIPOS } from "../api"
+import { getDemanda, api } from "../api"
 import { DropdownMenu } from "../components/DropdownMenu"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { type Demanda } from "../types"
 import { Chart } from "../components/Chart"
 import InputGroupText from "react-bootstrap/esm/InputGroupText"
@@ -12,22 +12,31 @@ export const Grafico = () => {
 
     const [demanda, setDemanda] = useState<Demanda>()
     const [periodo, setPeriodo] = useState<number>(8)
-    const [tipo, setTipo] = useState<string>(normalize(TIPOS[0]))
+    const [tipos, setTipos] = useState<string[]>([])
+    const [tipo, setTipo] = useState<string>()
+    
+    const handleTipo = (eventKey: string) => setTipo(normalize(eventKey))
 
-    const handleTipos = (eventKey: string) =>  setTipo(normalize(eventKey))
+    useEffect(() => {api.get<string[]>('/demandas').then((res) => {
+        setTipos(res.data)
+        handleTipo(res.data[0])
+    })}, [])
+    
+
     const handlePeriodo = (eventKey: number ) => {
         const n = Number(eventKey)
         if (!eventKey || Number.isNaN(n)) return
         setPeriodo(eventKey)
     }
-    const criarDemanda = () => getDemanda(tipo, periodo).then(res => setDemanda(res.data))
 
-    return (
+    const criarDemanda = () => tipo && getDemanda(tipo, periodo).then(res => setDemanda(res.data))
+
+    if(tipo) return (
         <Container className="d-flex flex-column justify-content-center align-items-center min-vh-100 gap-3 ">
             <h3>Gerar Demanda</h3>
             <div className="d-flex gap-1 align-items-baseline">
                 <label>Tipo:</label> 
-                <DropdownMenu variant="light" opcoes={TIPOS} onChange={handleTipos}/>
+                {<DropdownMenu variant="light" opcoes={tipos} onChange={handleTipo}/>}
                 <label className="ms-2">Período:</label>
                 <InputGroup>
                     <FormControl 

@@ -4,11 +4,13 @@ import { useMemo } from "react";
 
 interface Props {
   demanda: Demanda
+  min?: number
+  max?: number
   className?: string
   width?: number | `${number}%`
 }
 
-export const Chart = ({demanda, width, className}: Props) => {
+export const Chart = ({demanda, width, min=30000, max=50000, className}: Props) => {
   
   if(!demanda) return
   
@@ -30,7 +32,7 @@ export const Chart = ({demanda, width, className}: Props) => {
       <LineChart data={dados}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={'periodo'}/>
-        <YAxis domain={['auto', 'auto']} />
+        <YAxis domain={[min, max]} />
         <Tooltip />
         <Line type="monotone" dataKey="valor" stroke="#0d6efd" strokeWidth={2} dot animationDuration={400} />
       </LineChart>
