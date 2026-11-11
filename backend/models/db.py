@@ -21,4 +21,3 @@ class Usuario(Base):
         self.senha = senha
         self.ativo = ativo
         self.admin = admin
-

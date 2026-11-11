@@ -1,4 +1,21 @@
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
+
+class UsuarioSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    nome: str
+    email: str
+    senha: str
+    ativo: Optional[bool]
+    admin: Optional[bool]
+
+class LoginSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    email: str
+    senha: str
+
 class DemandaSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
@@ -11,3 +28,4 @@ class DemandaSchema(BaseModel):
     dados: list[int]
     referencias: list[int] | None = None
     peso: float | None = None
+

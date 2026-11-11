@@ -1,12 +1,11 @@
 from .demandas import Demanda, DemandaUniforme, DemandaTendencia, DemandaCiclica
-from .usuarios import Base
-from .utils import *
+from .db import Usuario, db
 
 __all__ = [
-    "Base",
     "Demanda",
     "DemandaUniforme",
     "DemandaTendencia",
     "DemandaCiclica",
-    "normalize"
+    "Usuario"
+    "db"
 ]

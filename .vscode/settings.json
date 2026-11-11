@@ -1,4 +1,5 @@
 {
+  "python.analysis.extraPaths": ["./backend"],
   "files.exclude": {
     "**/__pycache__": true,
     ".mypy_cache":true,
@@ -12,4 +13,5 @@
     "**/__pycache__": true,
     ".mypy_cache":true,
   },
+  "python.terminal.useEnvFile": true,
 }

@@ -3,7 +3,7 @@ import math
 from operator import add
 from abc import ABC, abstractmethod
 from typing import ClassVar
-from .utils import normalize
+from utils import normalize
 
 class Intervalo:
   def __init__(self, minimo: int, maximo: int, amplitude: int):
