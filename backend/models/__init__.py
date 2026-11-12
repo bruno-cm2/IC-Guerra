@@ -1,11 +1,12 @@
-from .demandas import Demanda, DemandaUniforme, DemandaTendencia, DemandaCiclica
-from .db import Usuario, db
+from .db import Base, Usuario, db
+from .demandas import Demanda, DemandaCiclica, DemandaTendencia, DemandaUniforme
 
-__all__ = [
+__all__ : list[str] = [
+    "Base",
     "Demanda",
-    "DemandaUniforme",
-    "DemandaTendencia",
     "DemandaCiclica",
-    "Usuario"
+    "DemandaTendencia",
+    "DemandaUniforme",
+    "Usuario",
     "db"
 ]

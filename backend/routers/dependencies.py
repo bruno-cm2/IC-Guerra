@@ -1,25 +1,27 @@
+import jwt
 from fastapi import Depends, HTTPException
-from main import SECRET_KEY, ALGORITHM, outh2_schema
+from jwt import InvalidTokenError
+from sqlalchemy.orm import Session, sessionmaker
+
+from config import ALGORITHM, SECRET_KEY, outh2_schema
 from models import Usuario, db
-from sqlalchemy.orm import sessionmaker, Session
-from jose import jwt, JWTError
+
 
 def session():
+    sessao = sessionmaker(bind=db)()
     try:
-        sessao = sessionmaker(bind=db)()
         yield sessao
-    finally: 
+    finally:
         sessao.close()
+
 
 def validar(token: str = Depends(outh2_schema), session: Session = Depends(session)):
     try:
-        dict_info = jwt.decode(token, SECRET_KEY, ALGORITHM)
+        dict_info = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id = dict_info.get("sub")
-    except JWTError:
+    except InvalidTokenError:
         raise HTTPException(401, "Acesso negado")
-    usuario = session.query(Usuario).filter(Usuario.id == id)
+    usuario = session.query(Usuario).filter(Usuario.id == id).first()
     if not usuario:
         raise HTTPException(401, "Acesso inválido")
     return usuario
-
-    

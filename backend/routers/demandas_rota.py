@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Query
-from schemas import DemandaSchema
 from typing import Literal
+
+from fastapi import APIRouter, Query
+
 from models import Demanda
+from schemas import DemandaSchema
 
 demandas_router = APIRouter(prefix="/demandas", tags=["Demandas"])
 

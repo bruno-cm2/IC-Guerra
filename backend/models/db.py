@@ -1,23 +1,19 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import String, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 db = create_engine("sqlite:///banco.db")
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
+
 
 class Usuario(Base):
     __tablename__ = "usuarios"
 
-    id=Column("id", Integer, primary_key=True, autoincrement=True)
-    nome=Column("nome", String)
-    email = Column("email", String, nullable=False)
-    senha = Column("senha", String, nullable=False)
-    ativo = Column("ativo", Boolean, default=True)
-    admin = Column("admin", Boolean, default=False)
-
-    def __init__(self, nome: str, email: str, senha: str, ativo: bool = True, admin:bool  = False):
-        self.nome = nome
-        self.email = email
-        self.senha = senha
-        self.ativo = ativo
-        self.admin = admin
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    nome: Mapped[str | None] = mapped_column(String)
+    email: Mapped[str] = mapped_column(String)
+    senha: Mapped[str] = mapped_column(String)
+    ativo: Mapped[bool | None] = mapped_column(default=True)
+    admin: Mapped[bool | None] = mapped_column(default=False)

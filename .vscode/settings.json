@@ -1,5 +1,4 @@
 {
-  "python.analysis.extraPaths": ["./backend"],
   "files.exclude": {
     "**/__pycache__": true,
     ".mypy_cache":true,
@@ -7,11 +6,13 @@
     "*/node_modules":true,
     "**/alembic.ini": true,
     "**/requirements.txt":true,
-    "**/requirements_dev.txt":true
+    "**/requirements_dev.txt":true,
+    "**/.ruff_cache":true
   },
   "search.exclude": {
     "**/__pycache__": true,
     ".mypy_cache":true,
   },
   "python.terminal.useEnvFile": true,
+  "python.analysis.typeCheckingMode": "standard",
 }

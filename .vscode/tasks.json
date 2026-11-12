@@ -25,14 +25,14 @@
         "type": "shell",
         "command": "../venv/Scripts/python.exe -m uvicorn main:app --reload",
         "options": { "cwd": "${workspaceFolder}/backend" },
-        "presentation": { "panel": "dedicated", "group": "dev" },
+        "presentation": { "group": "dev" },
       },
       {
         "label": "Frontend (npm)",
         "type": "shell",
         "command": "npm run dev",
         "options": { "cwd": "${workspaceFolder}/frontend", "env": { "PATH": "${workspaceFolder}\\venv\\Scripts;${env:PATH}" } },
-        "presentation": { "panel": "dedicated", "group": "dev" },
+        "presentation": { "group": "dev" },
       },
       {
         "label": "Preparar servidores",
