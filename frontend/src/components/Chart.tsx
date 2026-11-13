@@ -1,9 +1,9 @@
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { Demanda } from "../types";
+import type { DemandaSchema } from "../types";
 import { useMemo } from "react";
 
 interface Props {
-  demanda: Demanda
+  demanda: DemandaSchema
   min?: number
   max?: number
   className?: string

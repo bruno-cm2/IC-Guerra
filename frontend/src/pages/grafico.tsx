@@ -1,16 +1,17 @@
 import { Button, Container, FormControl, InputGroup } from "react-bootstrap"
-import { getDemanda, api } from "../api"
+import { api } from "../services/api"
 import { DropdownMenu } from "../components/DropdownMenu"
 import { useEffect, useState } from "react"
-import { type Demanda } from "../types"
+import { type DemandaSchema } from "../types"
 import { Chart } from "../components/Chart"
 import InputGroupText from "react-bootstrap/esm/InputGroupText"
+import { getDemanda } from "../services/demandas";
 
 export const Grafico = () => {
 
     const normalize = (str : string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
-    const [demanda, setDemanda] = useState<Demanda>()
+    const [demanda, setDemanda] = useState<DemandaSchema>()
     const [periodo, setPeriodo] = useState<number>(8)
     const [tipos, setTipos] = useState<string[]>([])
     const [tipo, setTipo] = useState<string>()
