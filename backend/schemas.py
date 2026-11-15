@@ -5,13 +5,13 @@ class UsuarioSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     nome: str
-    email: str
+    login: str
     senha: str
     
 class LoginSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    email: str
+    login: str
     senha: str
 
 class DemandaSchema(BaseModel):

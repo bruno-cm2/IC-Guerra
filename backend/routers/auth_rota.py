@@ -25,8 +25,8 @@ def novo_token(id, duracao = timedelta(minutes=int(TOKEN_EXPIRE_MINUTES))):
     encoded = jwt.encode(dict_info, SECRET_KEY, ALGORITHM)
     return encoded
 
-def autenticar(email: str, senha: str, session: Session = Depends(session)):
-    usuario = session.query(Usuario).filter(Usuario.email==email).first()
+def autenticar(login: str, senha: str, session: Session = Depends(session)):
+    usuario = session.query(Usuario).filter(Usuario.login==login).first()
     if not usuario or not pass_hash.verify(senha, usuario.senha):
         return False
     return usuario
@@ -40,7 +40,7 @@ async def home():
 
 @auth_router.post("/cadastrar")
 async def cadastrar(usuario_schema: UsuarioSchema, session: Session = Depends(session)):
-    usuario = session.query(Usuario).filter(Usuario.email==usuario_schema.email).first()
+    usuario = session.query(Usuario).filter(Usuario.login==usuario_schema.login).first()
     if usuario:
         raise HTTPException(400, "Usuário já existe")
     dados = usuario_schema.model_dump()
@@ -52,14 +52,14 @@ async def cadastrar(usuario_schema: UsuarioSchema, session: Session = Depends(se
 
 @auth_router.post("/login")
 async def login(login_schema: LoginSchema, session: Session = Depends(session)):
-    usuario = autenticar(login_schema.email, login_schema.senha, session)
+    usuario = autenticar(login_schema.login, login_schema.senha, session)
     if not usuario:
         raise HTTPException(400, "Credenciais inválidas")
     token = novo_token(usuario.id)
-    token_permanente = novo_token(usuario.id, timedelta(days=REFRESH_TOKEN_DAYS))
+    refresh_token = novo_token(usuario.id, timedelta(days=REFRESH_TOKEN_DAYS))
     return {
         "access_token": token,
-        "refresh_token": token_permanente,
+        "refresh_token": refresh_token,
         "token_type": "Bearer"
     }
 

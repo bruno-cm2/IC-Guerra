@@ -1,2 +1,11 @@
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Body"]
+
+[tool.mypy]
+mypy_path = "."
+explicit_package_bases = true
+files = ["."]
+exclude = ["alembic/", "venv/"]
+[tool.ruff.lint.per-file-ignores]
+# __mapper_args__ do SQLAlchemy: RUF012 pede ClassVar, mas o DeclarativeBase tipa como atributo de instância
+"models/db.py" = ["RUF012"]
