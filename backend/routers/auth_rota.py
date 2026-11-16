@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+from http import HTTPStatus
 
 import jwt
 from fastapi import APIRouter, Depends, HTTPException
@@ -38,11 +39,11 @@ async def home():
     Rota padrão de autenticação
     """
 
-@auth_router.post("/cadastrar")
+@auth_router.post("/cadastrar", status_code=HTTPStatus.CREATED)
 async def cadastrar(usuario_schema: UsuarioSchema, session: Session = Depends(session)):
     usuario = session.query(Usuario).filter(Usuario.login==usuario_schema.login).first()
     if usuario:
-        raise HTTPException(400, "Usuário já existe")
+        raise HTTPException(HTTPStatus.CONFLICT, "Usuário já existe")
     dados = usuario_schema.model_dump()
     dados["senha"] = pass_hash.hash(dados["senha"])
     novo_usuario = Usuario(**dados)
@@ -54,7 +55,7 @@ async def cadastrar(usuario_schema: UsuarioSchema, session: Session = Depends(se
 async def login(login_schema: LoginSchema, session: Session = Depends(session)):
     usuario = autenticar(login_schema.login, login_schema.senha, session)
     if not usuario:
-        raise HTTPException(400, "Credenciais inválidas")
+        raise HTTPException(HTTPStatus.UNAUTHORIZED, "Credenciais inválidas")
     token = novo_token(usuario.id)
     refresh_token = novo_token(usuario.id, timedelta(days=REFRESH_TOKEN_DAYS))
     return {
@@ -67,7 +68,7 @@ async def login(login_schema: LoginSchema, session: Session = Depends(session)):
 async def login_form(dados_form: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(session)):
     usuario = autenticar(dados_form.username, dados_form.password, session)
     if not usuario:
-        raise HTTPException(400, "Credenciais inválidas")
+        raise HTTPException(HTTPStatus.UNAUTHORIZED, "Credenciais inválidas")
     token = novo_token(usuario.id)
     return {
         "access_token": token,

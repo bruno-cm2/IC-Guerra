@@ -1,6 +1,7 @@
-import jwt
+from http import HTTPStatus
+
 from fastapi import Depends, HTTPException
-from jwt import InvalidTokenError
+from jwt import ExpiredSignatureError, InvalidTokenError, decode
 from sqlalchemy.orm import Session, sessionmaker
 
 from config import ALGORITHM, SECRET_KEY, outh2_schema
@@ -17,11 +18,13 @@ def session():
 
 def validar(token: str = Depends(outh2_schema), session: Session = Depends(session)):
     try:
-        dict_info = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        dict_info = decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id = dict_info.get("sub")
+    except ExpiredSignatureError:
+        raise HTTPException(HTTPStatus.UNAUTHORIZED, "Login expirado")
     except InvalidTokenError:
-        raise HTTPException(401, "Acesso negado")
+        raise HTTPException(HTTPStatus.UNAUTHORIZED, "Acesso negado")
     usuario = session.query(Usuario).filter(Usuario.id == id).first()
     if not usuario:
-        raise HTTPException(401, "Acesso inválido")
+        raise HTTPException(HTTPStatus.UNAUTHORIZED, "Acesso negado")
     return usuario
