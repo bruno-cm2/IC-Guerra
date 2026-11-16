@@ -1,5 +1,5 @@
-import type { LoginSchema, UsuarioSchema } from "../types";
-import { api } from "./api";
+export const TOKEN = "access_token"
+export const REFRESH = "refresh_token"
 
-export const cadastrarAPI = (usuario: UsuarioSchema) => api.post("/auth/cadastrar", usuario)
-export const loginAPI = (login: LoginSchema) => api.post("/auth/login", login)
+export const isAutenticated = () => localStorage.getItem(TOKEN) !== null
+export const getToken = () => localStorage.getItem(TOKEN)

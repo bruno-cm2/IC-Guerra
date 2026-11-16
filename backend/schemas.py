@@ -1,17 +1,18 @@
 from pydantic import BaseModel, ConfigDict
 
 
-class UsuarioSchema(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    
-    nome: str
-    login: str
-    senha: str
-    
-class LoginSchema(BaseModel):
+class UserSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     login: str
+    
+class TeamSchema(UserSchema):
+
+    senha: str
+
+class AdmSchema(UserSchema):
+    
+    nome: str
     senha: str
 
 class DemandaSchema(BaseModel):

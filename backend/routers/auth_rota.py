@@ -13,8 +13,8 @@ from config import (
     TOKEN_EXPIRE_MINUTES,
     pass_hash,
 )
-from models import Usuario
-from schemas import LoginSchema, UsuarioSchema
+from models import Usuario, Moderador
+from schemas import TeamSchema, AdmSchema
 
 from .dependencies import session, validar
 
@@ -40,19 +40,19 @@ async def home():
     """
 
 @auth_router.post("/cadastrar", status_code=HTTPStatus.CREATED)
-async def cadastrar(usuario_schema: UsuarioSchema, session: Session = Depends(session)):
-    usuario = session.query(Usuario).filter(Usuario.login==usuario_schema.login).first()
+async def cadastrar(usuario_schema: AdmSchema, session: Session = Depends(session)):
+    usuario = session.query(Moderador).filter(Moderador.login==usuario_schema.login).first()
     if usuario:
         raise HTTPException(HTTPStatus.CONFLICT, "Usuário já existe")
     dados = usuario_schema.model_dump()
     dados["senha"] = pass_hash.hash(dados["senha"])
-    novo_usuario = Usuario(**dados)
+    novo_usuario = Moderador(**dados)
     session.add(novo_usuario)
     session.commit()
     return {"mensagem": "Usuário cadastrado"}
 
 @auth_router.post("/login")
-async def login(login_schema: LoginSchema, session: Session = Depends(session)):
+async def login(login_schema: TeamSchema, session: Session = Depends(session)):
     usuario = autenticar(login_schema.login, login_schema.senha, session)
     if not usuario:
         raise HTTPException(HTTPStatus.UNAUTHORIZED, "Credenciais inválidas")
