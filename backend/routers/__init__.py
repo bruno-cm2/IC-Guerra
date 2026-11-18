@@ -1,5 +1,4 @@
-from .auth_rota import auth_router
-from .demandas_rota import demandas_router
-from .dependencies import session, validar
+from .auth import auth_router
+from .demandas import demandas_router
 
-__all__ = ["auth_router", "demandas_router", "session", "validar"]
+__all__ = ["auth_router", "demandas_router"]

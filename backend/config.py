@@ -8,7 +8,7 @@ load_dotenv()
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 ALGORITHM = os.environ["ALGORITHM"]
-TOKEN_EXPIRE_MINUTES = int(os.environ["TOKEN_EXPIRE_MINUTES"])
+ACCESS_TOKEN_MINUTES = int(os.environ["ACCESS_TOKEN_MINUTES"])
 REFRESH_TOKEN_DAYS = int(os.environ["REFRESH_TOKEN_DAYS"])
 
 pass_hash = PasswordHash.recommended()
